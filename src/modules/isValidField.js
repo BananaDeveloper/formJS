@@ -38,7 +38,7 @@ export function isValidField( fieldElem, fieldOptionsObj = {} ){
                 
                 } else {
 
-                    resolve( isValid.call(self, fieldEl, options) );
+                    resolve( isValid(fieldEl, options, self.validationRules, self.validationErrors) );
                     
                 }
 

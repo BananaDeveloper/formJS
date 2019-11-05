@@ -2,10 +2,21 @@
 import { mergeObjects, toCamelCase } from './helpers';
 import { validationRulesAttributes } from './validationRules';
 
-export function isValid( fieldEl, fieldOptions = {} ){
+/**
+ * 
+ * @function isValid
+ * @description Check the validity of the provided field element
+ * 
+ * @param {HTMLElement} fieldEl Element to be checked for validity
+ * @param {Object} [fieldOptions={}] Field options
+ * @param {*} [validationRules={}] Validation rules
+ * @param {*} [validationErrors={}] Validation errors
+ * 
+ * @returns {Promise<Object>} Promise that will return an object containing validity results/error
+ */
+export function isValid( fieldEl, fieldOptions = {}, validationRules = {}, validationErrors = {} ){
 
-    const self = this,
-          fieldType = ( fieldEl.matches('[data-subtype]') ? toCamelCase( fieldEl.getAttribute('data-subtype') ) : fieldEl.type ),
+    const fieldType = ( fieldEl.matches('[data-subtype]') ? toCamelCase( fieldEl.getAttribute('data-subtype') ) : fieldEl.type ),
           fieldValue = fieldEl.value,
           isValidValue = fieldValue.trim().length > 0,
           // ALPHABETICAL REVERSE ORDER
@@ -59,8 +70,8 @@ export function isValid( fieldEl, fieldOptions = {} ){
         });
 
         // RUN VALIDATIONS FOR validationRules
-        if( typeof self.validationRules[fieldType] === 'function' ){
-            resolve( self.validationRules[fieldType](fieldValue, fieldEl) );
+        if( typeof validationRules[fieldType] === 'function' ){
+            resolve( validationRules[fieldType](fieldValue, fieldEl) );
         } else {
             resolve( obj );
         }
@@ -71,7 +82,7 @@ export function isValid( fieldEl, fieldOptions = {} ){
         obj.result = obj.result && attrValidationsResult;
 
         if( !obj.result ){
-            let fieldErrors = (typeof self.validationErrors[fieldType] === 'function' ? self.validationErrors[fieldType](fieldValue, fieldEl) : {});
+            let fieldErrors = (typeof validationErrors[fieldType] === 'function' ? validationErrors[fieldType](fieldValue, fieldEl) : {});
             if( typeof obj.errors === 'undefined' ){
                 obj.errors = {};
             }
