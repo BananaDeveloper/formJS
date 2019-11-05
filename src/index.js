@@ -7,7 +7,7 @@ import { validationErrors }     from './modules/validationErrors';
 // CONSTRUCTOR FUNCTION & PUBLIC METHODS
 import { constructorFn }        from './modules/constructor';
 import { destroy }              from './modules/destroy';
-import { getFormData }          from './modules/getFormData';
+import { getFormFields }          from './modules/getFormFields';
 import { init }                 from './modules/init';
 import { validateField }        from './modules/validateField';
 import { validateForm }         from './modules/validateForm';
@@ -24,8 +24,16 @@ class Form {
         destroy.call(this);
     }
     
+    /**
+     * @method getFormData
+     * @description @simplySayHi What should I put here?
+     * 
+     * @returns @simplySayHi what should I put here?
+     */
     getFormData(){
-        return getFormData.call(this);
+        const formFields = getFormFields( this.formEl );
+
+        return this.options.formOptions.getFormData( formFields );
     }
 
     init(){
