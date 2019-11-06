@@ -205,7 +205,7 @@ runFunctionsSequence = function ({ functionsList = [], data = {}, stopConditionF
         });
     }, Promise.resolve([data]))
         .then(dataList => dataList.length > 1 ? dataList.slice(1) : dataList);
-};
+},
 
 serializeObject = function( obj ){
     var objToString = (
