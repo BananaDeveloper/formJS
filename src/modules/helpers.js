@@ -52,7 +52,6 @@ checkFormEl = function( formEl ){
 
 executeCallback = function( {fn = null, data = {}, options = {}} = {} ){
     let self = this,
-        optionsNew = mergeObjects({}, self.options, options),
         callbackFnList = [];
 
     if( typeof fn === 'function' ){
@@ -62,7 +61,7 @@ executeCallback = function( {fn = null, data = {}, options = {}} = {} ){
     }
 
     callbackFnList.forEach(function(promiseFn){
-        promiseFn.call( self, data, optionsNew );
+        promiseFn( data, options );
     });
 },
 

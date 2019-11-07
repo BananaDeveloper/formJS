@@ -1,5 +1,5 @@
 
-import { executeCallback, fieldsStringSelector, isFieldForChangeEvent } from './helpers';
+import { executeCallback, fieldsStringSelector, isFieldForChangeEvent, mergeObjects } from './helpers';
 import { submit } from './submit';
 
 export const callbackFns = {
@@ -40,12 +40,13 @@ export const callbackFns = {
     pastePrevent: function( event ){
 
         const self = this,
-              fieldEl = event.target;
+              fieldEl = event.target,
+        options = mergeObjects({}, self.options);
         let fieldOptions = self.options.fieldOptions;
 
         if( fieldEl.matches( fieldOptions.preventPasteFields ) ){     
             event.preventDefault();
-            executeCallback.call( self, {fn: fieldOptions.onPastePrevented, data: fieldEl} );
+            executeCallback( {fn: fieldOptions.onPastePrevented, data: fieldEl, options} );
         }
 
     },

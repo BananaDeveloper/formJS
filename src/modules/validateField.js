@@ -23,8 +23,8 @@ export function validateField( fieldElem, fieldOptionsObj = {callFormValidation:
             if( obj.fieldEl ){
             
                 const runCallback = function( data, fieldOptionsNew = {} ){
-                    let options = mergeObjects({}, {fieldOptions}, {fieldOptions:fieldOptionsNew});
-                    executeCallback.call( self, {fn: fieldOptions.onValidation, data, options} );
+                    let options = mergeObjects({}, self.options, {fieldOptions}, {fieldOptions:fieldOptionsNew});
+                    executeCallback( {fn: fieldOptions.onValidation, data, options} );
                 };
 
                 runCallback( [obj] );

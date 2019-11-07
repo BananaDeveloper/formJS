@@ -11,7 +11,8 @@ export function ajaxCall( formDataObj ){
         btnEl = formEl.querySelector('[type="submit"]'),
         timeoutTimer,
         xhrOptions = mergeObjects( {}, formOptions.ajaxOptions ),
-        isMultipart = xhrOptions.contentType === 'multipart/form-data';
+        isMultipart = xhrOptions.contentType === 'multipart/form-data',
+        options = mergeObjects({}, self.options);        
 
     xhrOptions.data = formDataObj;
     
@@ -60,14 +61,14 @@ export function ajaxCall( formDataObj ){
 
             if( xhr.status === 200 ){
                 let responseData = parseResponse(xhr);
-                executeCallback.call( self, {fn: formOptions.onSubmitSuccess, data: responseData} );
+                executeCallback( {fn: formOptions.onSubmitSuccess, data: responseData, options} );
             } else {
                 errorFn(e);
             }
         },
         errorFn = function(e) {
             let xhr = e.target;
-            executeCallback.call( self, {fn: formOptions.onSubmitError, data: xhr} );
+            executeCallback( {fn: formOptions.onSubmitError, data: xhr, options} );
         },
         completeFn = function(e) {
             if( timeoutTimer ){
@@ -75,7 +76,7 @@ export function ajaxCall( formDataObj ){
             }
 
             btnEl.disabled = false;
-            executeCallback.call( self, {fn: formOptions.onSubmitComplete} );
+            executeCallback( {fn: formOptions.onSubmitComplete, options} );
         };
     
     XHR.addEventListener('load',    successFn, false);
