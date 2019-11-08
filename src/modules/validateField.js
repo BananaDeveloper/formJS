@@ -9,15 +9,16 @@ export function validateField( fieldElem, fieldOptionsObj = {callFormValidation:
           callFormValidation = !!fieldOptionsObj.callFormValidation,
           fieldEl = (typeof fieldElem === 'string' ? self.formEl.querySelector(fieldElem) : fieldElem),
           fieldOptions = mergeObjects({}, self.options.fieldOptions, fieldOptionsObj),
-          beforeValidationFns = self.options.fieldOptions.beforeValidation.map( func => func.bind( this ) ),
           validationRules = self.validationRules,
           validationErrors = self.validationErrors;
+    
+    fieldOptions.beforeValidation = fieldOptions.beforeValidation.map( func => func.bind( this ) );
 
     delete fieldOptions.callFormValidation;
     
     return new Promise(function(resolve){
 
-        const prom = isValidField( fieldEl, fieldOptions, beforeValidationFns, validationRules, validationErrors );
+        const prom = isValidField( fieldEl, fieldOptions, validationRules, validationErrors );
         resolve( prom );
 
     }).then(obj => {
