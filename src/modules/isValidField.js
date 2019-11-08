@@ -2,7 +2,7 @@
 import { isDOMNode, mergeObjects, runFunctionsSequence, validateFieldObjDefault } from './helpers';
 import { isValid } from './isValid';
 
-export function isValidField( fieldEl, options = {}, beforeValidationFns = [], validationRules, validationErrors ){
+export function isValidField( fieldEl, options = {}, validationRules, validationErrors ){
 
     //field elem already set
     const self = this;
@@ -19,7 +19,7 @@ export function isValidField( fieldEl, options = {}, beforeValidationFns = [], v
 
     //before validation functions already set
     const rfsObject = {
-        functionsList: beforeValidationFns,
+        functionsList: options.fieldOptions.beforeValidationFns,
         data: {fieldEl}
     };
 
