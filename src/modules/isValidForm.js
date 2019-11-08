@@ -10,13 +10,14 @@ export function isValidForm( fieldOptionsObj = {} ){
           obj = mergeObjects({}, validateFormObjDefault),
           fieldOptions = mergeObjects( {}, self.options.fieldOptions, fieldOptionsObj, {focusOnRelated: false} ),
           fieldsList = getUniqueFields( formEl.querySelectorAll(fieldsStringSelector) )
-          beforeValidationFns = self.options.fieldOptions.beforeValidation.map( func => func.bind( this ) ),
           validationRules = self.validationRules,
           validationErrors = self.validationErrors;
+    
+    fieldOptions.beforeValidation = fieldOptions.beforeValidation.map( func => func.bind( this ) );
 
     return Promise.all( fieldsList.map(function( fieldEl ){
         
-        return isValidField( fieldEl, fieldOptions, beforeValidationFns, validationRules, validationErrors );
+        return isValidField( fieldEl, fieldOptions, validationRules, validationErrors );
 
     }) ).then(list => {
 
