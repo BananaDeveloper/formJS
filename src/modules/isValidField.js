@@ -2,27 +2,29 @@
 import { isDOMNode, mergeObjects, runFunctionsSequence, validateFieldObjDefault } from './helpers';
 import { isValid } from './isValid';
 
-export function isValidField( fieldElem, fieldOptionsObj = {} ){
+export function isValidField( fieldEl, options = {}, validationRules, validationErrors ){
 
-    const self = this,
-          fieldEl = (typeof fieldElem === 'string' ? self.formEl.querySelector(fieldElem) : fieldElem);
+    //field elem already set
+    const self = this;
 
     let obj = mergeObjects({}, validateFieldObjDefault, {fieldEl});
 
     if( !isDOMNode(fieldEl) ){ return Promise.resolve(obj); }
 
-    let options =           mergeObjects( {}, self.options.fieldOptions, fieldOptionsObj ),
-        isValidValue =      fieldEl.value.trim().length > 0,
+    //options already merged
+    let isValidValue =      fieldEl.value.trim().length > 0,
         isRequired =        fieldEl.required,
         isReqFrom =         fieldEl.matches('[data-required-from]'),
         isValidateIfFilled =fieldEl.matches('[data-validate-if-filled]');
 
+    //before validation functions already set
     const rfsObject = {
-        functionsList: self.options.fieldOptions.beforeValidation.map( func => func.bind( this ) ),
+        functionsList: options.fieldOptions.beforeValidationFns,
         data: {fieldEl}
     };
 
-    return runFunctionsSequence.call(self, rfsObject)
+    //runfunctionsequence without self
+    return runFunctionsSequence(rfsObject)
         .then(data => {
 
             let dataObj = data.pop();
@@ -38,7 +40,8 @@ export function isValidField( fieldElem, fieldOptionsObj = {} ){
                 
                 } else {
 
-                    resolve( isValid(fieldEl, options, self.validationRules, self.validationErrors) );
+                    //validation rules and errors
+                    resolve( isValid(fieldEl, options, validationRules, validationErrors) );
                     
                 }
 
