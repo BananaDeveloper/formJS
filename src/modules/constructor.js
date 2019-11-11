@@ -21,6 +21,18 @@ export function constructorFn(formEl, optionsObj = {}) {
     self.formEl = checkFormElem.element;
     self.formEl.formjs = self;
     self.options = mergeObjects({}, self.constructor.prototype.options, optionsObj);
+    
+    //Binding context for future executions
+    const cbList = ['onPastePrevented', 'onValidation', 'onSubmitComplete', 'onSubmitError', 'onSubmitSuccess'];
+    cbList.forEach(cbName => {
+        let optionType = Array.isArray(self.options.formOptions[cbName]) ? 'formOptions' : 'fieldOptions',
+            cbOpt = self.options[optionType][cbName];
+        
+        if( cbOpt && Array.isArray(cbOpt) ){
+            self.options[optionType][cbName] = cbOpt.map(cbFn => cbFn.bind(self));
+        }
+    });
+    
     self.listenerCallbacks = {
         dataTypeNumber: callbackFns.dataTypeNumber,
         keypressMaxlength: callbackFns.keypressMaxlength,
@@ -28,17 +40,6 @@ export function constructorFn(formEl, optionsObj = {}) {
         submit: callbackFns.submit.bind(self),
         validation: callbackFns.validation.bind(self)
     };
-
-    //Binding this for fture executions
-
-    //form options
-    self.options.formOptions.onSubmitSuccess = self.options.formOptions.onSubmitSuccess.bind(self);
-    self.options.formOptions.onSubmitError = self.options.formOptions.onSubmitError.bind(self);
-    self.options.formOptions.onSubmitError = self.options.formOptions.onSubmitComplete.bind(self);
-
-    //field options
-    self.options.fieldOptions.onPastePrevented = self.options.fieldOptions.onPastePrevented.bind(self);
-    self.options.fieldOptions.onValidation = self.options.fieldOptions.onValidation.bind(self);
 
     Object.freeze(self.listenerCallbacks);
 
