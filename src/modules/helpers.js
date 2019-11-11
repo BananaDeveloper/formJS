@@ -51,8 +51,7 @@ checkFormEl = function( formEl ){
 },
 
 executeCallback = function( {fn = null, data = {}, options = {}} = {} ){
-    let self = this,
-        callbackFnList = [];
+    let callbackFnList = [];
 
     if( typeof fn === 'function' ){
         callbackFnList.push( fn );
