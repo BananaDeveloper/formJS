@@ -5,7 +5,8 @@ import { isValidForm } from './isValidForm';
 export function validateForm( fieldOptionsObj = {} ){
 
     const self = this,
-          fieldOptions = mergeObjects({}, self.options.fieldOptions, fieldOptionsObj);
+          fieldOptions = mergeObjects({}, self.options.fieldOptions, fieldOptionsObj),
+          options = mergeObjects({}, self.options, { fieldOptions } );
 
     return new Promise(function(resolve){
 
@@ -14,7 +15,7 @@ export function validateForm( fieldOptionsObj = {} ){
 
     }).then(obj => {
 
-        executeCallback.call( self, {fn: fieldOptions.onValidation, data: obj.fields, options: {fieldOptions: fieldOptionsObj}} );
+        executeCallback( {fn: fieldOptions.onValidation, data: obj.fields, options} );
         return obj;
 
     });

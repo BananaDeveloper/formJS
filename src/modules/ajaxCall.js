@@ -11,7 +11,9 @@ export function ajaxCall( formDataObj ){
         btnEl = formEl.querySelector('[type="submit"]'),
         timeoutTimer,
         ajaxOptions = mergeObjects( {}, formOptions.ajaxOptions ),
-        isMultipart = ajaxOptions.headers['Content-Type'] === 'multipart/form-data';
+        isMultipart = ajaxOptions.headers['Content-Type'] === 'multipart/form-data',
+        options = mergeObjects({}, self.options);
+
 
     ajaxOptions.body = formDataObj;
     
@@ -89,10 +91,10 @@ export function ajaxCall( formDataObj ){
 
         })
         .then(function( data ){
-            executeCallback.call( self, {fn: formOptions.onSubmitSuccess, data} );
+            executeCallback( {fn: formOptions.onSubmitSuccess, data, options} );
         })
         .catch(function( error ){
-            executeCallback.call( self, {fn: formOptions.onSubmitError, data: error} );
+            executeCallback( {fn: formOptions.onSubmitError, data: error, options} );
         })
         .finally(function(){
 
@@ -100,7 +102,8 @@ export function ajaxCall( formDataObj ){
                 window.clearTimeout( timeoutTimer );
             }
             btnEl.disabled = false;
-            executeCallback.call( self, {fn: formOptions.onSubmitComplete} );
+
+            executeCallback( {fn: formOptions.onSubmitComplete, options} );
 
         });
     
