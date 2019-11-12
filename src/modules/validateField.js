@@ -3,22 +3,14 @@ import { executeCallback, mergeObjects } from './helpers';
 import { isValidField } from './isValidField';
 import { isValidForm } from './isValidForm';
 
-export function validateField( fieldElem, fieldOptionsObj = {callFormValidation: true} ){
-
-    const self = this,
-          callFormValidation = !!fieldOptionsObj.callFormValidation,
-          fieldEl = (typeof fieldElem === 'string' ? self.formEl.querySelector(fieldElem) : fieldElem),
-          fieldOptions = mergeObjects({}, self.options.fieldOptions, fieldOptionsObj),
-          validationRules = self.validationRules,
-          validationErrors = self.validationErrors;
-    
-    fieldOptions.beforeValidation = fieldOptions.beforeValidation.map( func => func.bind( this ) );
+export function validateField( fieldElem, fieldOptions, validationRules, validationErrors, fieldOptionsObj = {callFormValidation: true}, options ){
+    const callFormValidation = !!fieldOptionsObj.callFormValidation;
 
     delete fieldOptions.callFormValidation;
     
     return new Promise(function(resolve){
 
-        const prom = isValidField( fieldEl, fieldOptions, validationRules, validationErrors );
+        const prom = isValidField( fieldElem, fieldOptions, validationRules, validationErrors );
         resolve( prom );
 
     }).then(obj => {
@@ -27,7 +19,7 @@ export function validateField( fieldElem, fieldOptionsObj = {callFormValidation:
             if( obj.fieldEl ){
             
                 const runCallback = function( data, fieldOptionsNew = {} ){
-                    let options = mergeObjects({}, self.options, {fieldOptions}, {fieldOptions:fieldOptionsNew});
+                    let options = mergeObjects({}, options, {fieldOptions}, {fieldOptions:fieldOptionsNew});
                     executeCallback( {fn: fieldOptions.onValidation, data, options} );
                 };
 

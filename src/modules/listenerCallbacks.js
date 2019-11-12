@@ -107,7 +107,7 @@ export const callbackFns = {
                 (!isFieldForChangeEventBoolean && eventName !== 'change')
             ){
                 
-                return self.validateField( fieldEl, {callFormValidation} ).then(obj => {
+                return self.validateField( fieldEl, {callFormValidation}, self.validationRules, self.validationErrors, self.options ).then(obj => {
                     const type = obj.fieldEl.type,
                           realtedFieldEqualTo = obj.fieldEl.closest('form').querySelector('[data-equal-to="'+ obj.fieldEl.name +'"]');
 
@@ -117,7 +117,7 @@ export const callbackFns = {
                         !(type === 'checkbox' || type === 'radio') && 
                         realtedFieldEqualTo && realtedFieldEqualTo.value.trim() !== ''
                     ){
-                        return self.validateField( realtedFieldEqualTo, {callFormValidation} );
+                        return self.validateField( realtedFieldEqualTo, {callFormValidation}, self.validationRules, self.validationErrors, self.options );
                     } else {
                         return obj;
                     }

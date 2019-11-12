@@ -23,7 +23,7 @@ export function constructorFn(formEl, optionsObj = {}) {
     self.options = mergeObjects({}, self.constructor.prototype.options, optionsObj);
     
     //Binding context for future executions
-    const cbList = ['onPastePrevented', 'onValidation', 'onSubmitComplete', 'onSubmitError', 'onSubmitSuccess'];
+    const cbList = ['onPastePrevented', 'onValidation', 'onSubmitComplete', 'onSubmitError', 'onSubmitSuccess', 'beforeValidation'];
     cbList.forEach(cbName => {
         let optionType = Array.isArray(self.options.formOptions[cbName]) ? 'formOptions' : 'fieldOptions',
             cbOpt = self.options[optionType][cbName];
