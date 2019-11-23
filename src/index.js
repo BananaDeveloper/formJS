@@ -43,11 +43,13 @@ class Form {
         return init.call(this);
     }
 
-    validateField(fieldEl, fieldOptions = {callFormValidation: true}) {
+    validateField(fieldEl, fieldOptions) {
         const el = (isDOMNode(fieldEl) ? fieldEl : this.formEl.querySelector(fieldEl));
-        const fieldOpt = mergeObjects({}, this.options.fieldOptions, fieldOptions);
+        const optionsObj = mergeObjects({}, this.options, {fieldOptions});
+        
+        optionsObj.fieldOptions.callFormValidation = ( typeof optionsObj.fieldOptions.callFormValidation === 'undefined' ? true : optionsObj.fieldOptions.callFormValidation );
 
-        return validateField(el, fieldOpt, this.validationRules, this.validationErrors, this.options);
+        return validateField(el, optionsObj, this.validationRules, this.validationErrors);
     }
 
     validateForm(fieldOptions) {
