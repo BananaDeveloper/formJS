@@ -3,14 +3,14 @@ import { executeCallback, mergeObjects } from './helpers';
 import { isValidField } from './isValidField';
 import { isValidForm } from './isValidForm';
 
-export function validateField( fieldElem, fieldOptions, validationRules, validationErrors, fieldOptionsObj = {callFormValidation: true}, options ){
-    const callFormValidation = !!fieldOptionsObj.callFormValidation;
+export function validateField( fieldEl, options, validationRules, validationErrors ){
+    const callFormValidation = !!options.fieldOptions.callFormValidation;
 
-    delete fieldOptions.callFormValidation;
+    delete options.fieldOptions.callFormValidation;
     
     return new Promise(function(resolve){
 
-        const prom = isValidField( fieldElem, fieldOptions, validationRules, validationErrors );
+        const prom = isValidField( fieldEl, options.fieldOptions, validationRules, validationErrors );
         resolve( prom );
 
     }).then(obj => {
@@ -18,8 +18,8 @@ export function validateField( fieldElem, fieldOptions, validationRules, validat
         return new Promise(resolve => {
             if( obj.fieldEl ){
             
-                const runCallback = function( data, fieldOptionsNew = {} ){
-                    let options = mergeObjects({}, options, {fieldOptions}, {fieldOptions:fieldOptionsNew});
+                const runCallback = function( data, fieldOptions = {} ){
+                    let options = mergeObjects({}, options, {fieldOptions});
                     executeCallback( {fn: fieldOptions.onValidation, data, options} );
                 };
 
