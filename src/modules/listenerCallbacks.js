@@ -59,7 +59,8 @@ export const callbackFns = {
 
         const self = this,
               eventName = event.type,
-              fieldEl = event.target;
+              fieldEl = event.target,
+              options = mergeObjects({}, self.options, {fieldOptions: callFormValidation});
 
         if( fieldEl.matches( fieldsStringSelector ) ){
             const isFieldForChangeEventBoolean = isFieldForChangeEvent(fieldEl),
@@ -77,7 +78,7 @@ export const callbackFns = {
 
                     if( findReqFromEl !== null ){
                         findReqFromEl.required = fieldEl.required;
-                        if( self.options.fieldOptions.focusOnRelated ){
+                        if( options.fieldOptions.focusOnRelated ){
                             findReqFromEl.focus();
                         }
                     }
@@ -107,7 +108,7 @@ export const callbackFns = {
                 (!isFieldForChangeEventBoolean && eventName !== 'change')
             ){
                 
-                return self.validateField( fieldEl, {callFormValidation}, self.validationRules, self.validationErrors, self.options ).then(obj => {
+                return self.validateField( fieldEl, options, self.validationRules, self.validationErrors ).then(obj => {
                     const type = obj.fieldEl.type,
                           realtedFieldEqualTo = obj.fieldEl.closest('form').querySelector('[data-equal-to="'+ obj.fieldEl.name +'"]');
 
@@ -117,7 +118,7 @@ export const callbackFns = {
                         !(type === 'checkbox' || type === 'radio') && 
                         realtedFieldEqualTo && realtedFieldEqualTo.value.trim() !== ''
                     ){
-                        return self.validateField( realtedFieldEqualTo, {callFormValidation}, self.validationRules, self.validationErrors, self.options );
+                        return self.validateField( realtedFieldEqualTo, options, self.validationRules, self.validationErrors );
                     } else {
                         return obj;
                     }
